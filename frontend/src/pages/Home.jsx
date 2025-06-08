@@ -5,7 +5,7 @@ const features = [
 	{
 		icon: (
 			<svg
-				className="w-8 h-8 text-blue-400"
+				className="w-8 h-8 text-cyan-400"
 				fill="none"
 				stroke="currentColor"
 				strokeWidth="2"
@@ -19,12 +19,12 @@ const features = [
 			</svg>
 		),
 		title: 'Real-time Chat',
-		desc: 'Instant messaging with friends and groups, powered by fast backend.',
+		desc: 'Instant messaging with friends and groups, powered by a fast backend.',
 	},
 	{
 		icon: (
 			<svg
-				className="w-8 h-8 text-blue-400"
+				className="w-8 h-8 text-emerald-400"
 				fill="none"
 				stroke="currentColor"
 				strokeWidth="2"
@@ -43,7 +43,7 @@ const features = [
 	{
 		icon: (
 			<svg
-				className="w-8 h-8 text-blue-400"
+				className="w-8 h-8 text-cyan-400"
 				fill="none"
 				stroke="currentColor"
 				strokeWidth="2"
@@ -71,43 +71,42 @@ const Home = () => {
 	};
 
 	return (
-		<div className="min-h-screen flex flex-col bg-gray-900 font-sans text-white">
+		<div className="min-h-screen flex flex-col bg-black font-sans text-white">
 			{/* Header */}
-			<header className="sticky top-0 z-10 bg-gray-950/90 shadow-md backdrop-blur flex items-center justify-between px-6 py-4">
+			<header className="sticky top-0 z-10 bg-black/95 shadow-md backdrop-blur flex items-center justify-between px-6 py-4">
 				<Link
 					to="/"
-					className="flex items-center gap-2 text-2xl font-bold text-blue-400"
+					className="flex items-center gap-2 text-2xl font-bold text-cyan-400 font-sans"
 				>
-					<span className="bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-white font-extrabold">
+					<span className="bg-cyan-400 rounded-full w-8 h-8 flex items-center justify-center text-black font-extrabold">
 						C
 					</span>
 					ChatApp
 				</Link>
-				<nav className="hidden md:flex gap-8 text-lg">
+				<nav className="hidden md:flex gap-8 text-lg font-medium">
 					<Link
 						to="/"
-						className="hover:text-blue-400 transition-colors"
+						className="hover:text-cyan-400 transition-colors"
 					>
 						Home
 					</Link>
-					<button type="button" onClick={handleFeatureClick} className="hover:text-blue-400 transition-colors bg-transparent focus:outline-none">
+					<button type="button" onClick={handleFeatureClick} className="hover:text-cyan-400 transition-colors bg-transparent focus:outline-none">
 						Features
 					</button>
 					<Link
 						to="/login"
-						className="hover:text-blue-400 transition-colors"
+						className="hover:text-cyan-400 transition-colors"
 					>
 						Login
 					</Link>
 					<Link
 						to="/register"
-						className="hover:text-blue-400 transition-colors"
+						className="hover:text-cyan-400 transition-colors"
 					>
 						Register
 					</Link>
 				</nav>
-				<button className="md:hidden text-gray-300 hover:text-blue-400 focus:outline-none">
-					{/* Mobile menu icon placeholder */}
+				<button className="md:hidden text-gray-300 hover:text-cyan-400 focus:outline-none">
 					<svg
 						className="w-7 h-7"
 						fill="none"
@@ -125,35 +124,33 @@ const Home = () => {
 			</header>
 
 			{/* Hero Section */}
-			<section className="flex-1 flex flex-col items-center justify-center px-4 py-16 text-center">
-				<h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight">
-					Connect. Chat. Collaborate.
-				</h1>
-				<p className="text-lg md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
+			<section className="flex-1 flex flex-col items-center justify-center px-4 py-20 text-center">
+				<h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight font-sans" style={{fontFamily: 'Inter, Poppins, sans-serif'}}>Connect. Chat. Collaborate.</h1>
+				<p className="text-lg md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto font-sans">
 					Experience seamless, secure, and real-time messaging with your friends
 					and teams. All in one modern chat platform.
 				</p>
 				<Link
 					to="/register"
-					className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 text-lg focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:outline-none hover:scale-105 hover:shadow-xl"
+					className="inline-block px-8 py-3 bg-cyan-400 hover:bg-cyan-300 active:bg-cyan-500 text-black font-semibold rounded-lg shadow-lg transition-all duration-200 text-lg focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:outline-none hover:scale-105 hover:shadow-xl font-sans"
 				>
 					Get Started
 				</Link>
 			</section>
 
 			{/* Features Section */}
-			<section id="features" className="py-12 px-4 bg-gray-800">
+			<section id="features" className="py-14 px-4 bg-black">
 				<div className="max-w-5xl mx-auto">
-					<h2 className="text-3xl font-bold text-center mb-10">Features</h2>
+					<h2 className="text-3xl font-bold text-center mb-10 text-white font-sans">Features</h2>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 						{features.map((f, i) => (
 							<div
 								key={i}
-								className="bg-gray-900 rounded-xl shadow-lg p-8 flex flex-col items-center text-center transition-all duration-200 hover:shadow-2xl hover:-translate-y-2 hover:bg-gray-800 hover:ring-2 hover:ring-blue-500 cursor-pointer"
+								className="bg-gray-800 rounded-2xl shadow-lg p-8 flex flex-col items-center text-center transition-all duration-200 hover:shadow-2xl hover:-translate-y-2 hover:bg-gray-700 hover:ring-2 hover:ring-cyan-400 cursor-pointer"
 							>
 								<div className="mb-4">{f.icon}</div>
-								<h3 className="text-xl font-semibold mb-2">{f.title}</h3>
-								<p className="text-gray-400">{f.desc}</p>
+								<h3 className="text-xl font-semibold mb-2 text-emerald-400 font-sans">{f.title}</h3>
+								<p className="text-gray-300 font-sans">{f.desc}</p>
 							</div>
 						))}
 					</div>
@@ -161,7 +158,7 @@ const Home = () => {
 			</section>
 
 			{/* Footer */}
-			<footer className="mt-auto py-6 bg-gray-950 text-center text-gray-400 text-sm">
+			<footer className="mt-auto py-6 bg-black text-center text-gray-400 text-sm font-sans">
 				&copy; {new Date().getFullYear()} ChatApp. All rights reserved.
 			</footer>
 		</div>
