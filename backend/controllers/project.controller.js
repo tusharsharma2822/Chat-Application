@@ -4,26 +4,29 @@ import userModel from "../models/user.model.js";
 import { validationResult } from "express-validator"
 
 export const createProjectController = async (req, res) => {
-
     const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
-    if(!errors.isEmpty()){
-        return res.status(400).json({ errors: errors.array() })
+    if (!req.user || !req.user.email) {
+        return res.status(401).json({ message: "Unauthorized: user info missing" });
     }
 
     try {
-
         const { name } = req.body;
         const loggedInUser = await userModel.findOne({ email: req.user.email });
-        const userId = loggedInUser._id;
 
+        if (!loggedInUser) {
+            return res.status(404).json({ message: "User not found in DB" });
+        }
+
+        const userId = loggedInUser._id;
         const newProject = await projectService.createProject({ name, userId });
 
-        return res.status(201).json(newProject)
-        
+        return res.status(201).json(newProject);
     } catch (error) {
         console.log(error);
-        return res.status(400).send(error.message)
+        return res.status(400).send(error.message);
     }
-
-}
+};
