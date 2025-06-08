@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const features = [
@@ -62,12 +62,14 @@ const features = [
 ]
 
 const Home = () => {
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	// Scroll to features section
 	const handleFeatureClick = () => {
 		const featuresSection = document.getElementById('features');
 		if (featuresSection) {
 			featuresSection.scrollIntoView({ behavior: 'smooth' });
 		}
+		setMobileMenuOpen(false);
 	};
 
 	return (
@@ -84,29 +86,16 @@ const Home = () => {
 					ChatApp
 				</Link>
 				<nav className="hidden md:flex gap-8 text-lg font-medium">
-					<Link
-						to="/"
-						className="hover:text-cyan-400 transition-colors"
-					>
-						Home
-					</Link>
-					<button type="button" onClick={handleFeatureClick} className="hover:text-cyan-400 transition-colors bg-transparent focus:outline-none">
-						Features
-					</button>
-					<Link
-						to="/login"
-						className="hover:text-cyan-400 transition-colors"
-					>
-						Login
-					</Link>
-					<Link
-						to="/register"
-						className="hover:text-cyan-400 transition-colors"
-					>
-						Register
-					</Link>
+					<Link to="/" className="hover:text-cyan-400 transition-colors">Home</Link>
+					<button type="button" onClick={handleFeatureClick} className="hover:text-cyan-400 transition-colors bg-transparent focus:outline-none">Features</button>
+					<Link to="/login" className="hover:text-cyan-400 transition-colors">Login</Link>
+					<Link to="/register" className="hover:text-cyan-400 transition-colors">Register</Link>
 				</nav>
-				<button className="md:hidden text-gray-300 hover:text-cyan-400 focus:outline-none">
+				<button
+					onClick={() => setMobileMenuOpen((prev) => !prev)}
+					className="md:hidden text-gray-300 hover:text-cyan-400 focus:outline-none"
+					aria-label="Open mobile menu"
+				>
 					<svg
 						className="w-7 h-7"
 						fill="none"
@@ -122,6 +111,21 @@ const Home = () => {
 					</svg>
 				</button>
 			</header>
+
+			{/* Mobile Menu */}
+			{mobileMenuOpen && (
+				<div className="md:hidden fixed inset-0 z-40 bg-black/90 flex flex-col items-center justify-center space-y-8 text-lg font-medium animate-fade-in">
+					<button onClick={() => setMobileMenuOpen(false)} className="absolute top-6 right-6 text-gray-400 hover:text-cyan-400 focus:outline-none" aria-label="Close menu">
+						<svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+							<path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</button>
+					<Link to="/" onClick={() => setMobileMenuOpen(false)} className="hover:text-cyan-400 transition-colors">Home</Link>
+					<button type="button" onClick={handleFeatureClick} className="hover:text-cyan-400 transition-colors bg-transparent focus:outline-none">Features</button>
+					<Link to="/login" onClick={() => setMobileMenuOpen(false)} className="hover:text-cyan-400 transition-colors">Login</Link>
+					<Link to="/register" onClick={() => setMobileMenuOpen(false)} className="hover:text-cyan-400 transition-colors">Register</Link>
+				</div>
+			)}
 
 			{/* Hero Section */}
 			<section className="flex-1 flex flex-col items-center justify-center px-4 py-20 text-center">
