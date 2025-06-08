@@ -5,6 +5,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import connectToDB from "./db/db.js";
 import userRoutes from "./routes/user.routes.js";
+import projectRoutes from "./routes/project.routes.js";
 
 connectToDB();            
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(morgan('dev'));
 
 app.use("/users", userRoutes);
+app.use("/projects", projectRoutes);
 
 app.get("/", (req, res) => {
     res.send("Hello, World!");
