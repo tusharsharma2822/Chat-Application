@@ -11,15 +11,18 @@ const Register = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
   const { setUser } = useContext(UserContext);
-
   const navigate = useNavigate();
+  // State to hold redirect message
+  const [redirectMsg, setRedirectMsg] = useState("");
 
   async function submitHandler(e) {
     e.preventDefault();
     setError('');
     setLoading(true);
+    // Remove any existing auth token and clear user context before registration
+    localStorage.removeItem("token");
+    setUser(null);
     try {
       // Backend expects fullname as an object with firstname and lastname
       await axios.post("/users/register", {
@@ -29,13 +32,14 @@ const Register = () => {
         },
         email,
         password
-      }).then((res) => {
-        setLoading(false);  
-        localStorage.setItem("token", res.data.token);
-        setUser(res.data.user)
-        navigate("/dashboard");
-      })
-      
+      });
+      setLoading(false);
+      // Set redirect message and navigate to login
+      setRedirectMsg("Please login again to continue the service.");
+      setTimeout(() => {
+        navigate("/login", { state: { message: "Please login again to continue the service." } });
+      }, 1000);
+      return;
     } catch (err) {
       setLoading(false);
       if (err.response && err.response.data && err.response.data.message) {
@@ -59,6 +63,7 @@ const Register = () => {
         </div>
         <h2 className="text-3xl font-bold text-cyan-400 mb-8 text-center">Register</h2>
         {error && <div className="mb-4 text-red-400 text-center">{error}</div>}
+        {redirectMsg && <div className="mb-4 text-green-400 text-center">{redirectMsg}</div>}
         <form className="space-y-6" onSubmit={submitHandler}>
           <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
             <div className="w-full">
