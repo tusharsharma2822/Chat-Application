@@ -30,3 +30,29 @@ export const createProjectController = async (req, res) => {
         return res.status(400).send(error.message);
     }
 };
+
+export const getAllProject = async (req, res) => {
+    if (!req.user || !req.user.email) {
+        return res.status(401).json({ message: "Unauthorized: user info missing" });
+    }
+    try {
+        const loggedInUser = await userModel.findOne({
+            email: req.user.email
+        });
+
+        if (!loggedInUser) {
+            return res.status(404).json({ message: "User not found in DB" });
+        }
+
+        const allProjectUsers = await projectService.getAllProjectByUserId({
+            userId: loggedInUser._id
+        });
+
+        return res.status(200).json({
+            projects: allProjectUsers
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: error.message });
+    }
+}
