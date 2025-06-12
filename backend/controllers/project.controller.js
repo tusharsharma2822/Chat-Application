@@ -48,6 +48,7 @@ export const getAllProject = async (req, res) => {
             userId: loggedInUser._id
         });
 
+        res.set('Cache-Control', 'no-store'); // Prevent caching for this response
         return res.status(200).json({
             projects: allProjectUsers
         });
