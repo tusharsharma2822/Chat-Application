@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from "../context/user.context";
 import axios from "../config/axios";
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ const DashBoard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [projectName, setProjectName] = useState('');
   const [isUserReady, setIsUserReady] = useState(false);
+  const [project, setProject] = useState([])
   const navigate = useNavigate();
 
   // Wait for user context to be available
@@ -19,6 +20,22 @@ const DashBoard = () => {
       setIsUserReady(false);
     }
   }, [user]);
+
+  // Fetch projects for the logged-in user
+  const fetchProjects = async () => {
+    try {
+      const res = await axios.get("/projects/all", { headers: { 'Cache-Control': 'no-store' } });
+      setProject(res.data.projects || []);
+    } catch (err) {
+      setProject([]);
+    }
+  };
+
+  useEffect(() => {
+    if (isUserReady) {
+      fetchProjects();
+    }
+  }, [isUserReady]);
 
   async function createProject(e) {
     e.preventDefault();
@@ -33,8 +50,10 @@ const DashBoard = () => {
           }
         }
       );
-      console.log(projectName);
       setIsModalOpen(false);
+      setProjectName("");
+      // Fetch projects again after creating a new one
+      fetchProjects();
     } catch (error) {
       console.log(error);
     }
@@ -42,15 +61,10 @@ const DashBoard = () => {
 
   async function handleLogout() {
     try {
-      await axios.get("/users/logout", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      });
+      await axios.post("/users/logout");
       localStorage.removeItem("token");
       navigate("/login");
     } catch (error) {
-      // Optionally handle error, but always remove token and redirect
       localStorage.removeItem("token");
       navigate("/login");
     }
@@ -58,20 +72,47 @@ const DashBoard = () => {
 
   return (
     <main className="p-4 min-h-screen bg-black text-cyan-300 font-sans">
-      <div className="flex items-center justify-between mb-6">
-        <div className='projects'>
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 gap-4">
+        <div className='projects w-full md:w-3/4'>
           <button 
             onClick={() => isUserReady && setIsModalOpen(true)}
-            className={`project p-4 border border-cyan-400 rounded-md px-4 py-2 bg-cyan-600 text-white hover:bg-cyan-700${!isUserReady ? ' opacity-50 cursor-not-allowed' : ''}`}
+            className={`project w-full md:w-auto p-4 border border-cyan-400 rounded-md px-4 py-2 bg-cyan-600 text-white hover:bg-cyan-700${!isUserReady ? ' opacity-50 cursor-not-allowed' : ''}`}
             disabled={!isUserReady}
           >
             Create a New Project
             <i className="ri-link ml-2"></i>
           </button>
+          {/* Render project cards below the button */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+            {Array.isArray(project) && project.length > 0 && project.map((project) => (
+              <div key={project._id}
+                onClick={() => {
+                  navigate(`/project`, {
+                    state: { project }
+                  })
+                }}
+                className='project flex flex-col gap-2 cursor-pointer p-4 border border-cyan-400 rounded-md min-w-0 bg-gray-900 transition-all duration-200 hover:bg-cyan-900 hover:scale-105 hover:shadow-lg relative'
+              >
+                <h2 className='font-semibold break-words'>
+                  {project.name}
+                </h2>
+                {/* Person count at bottom-right */}
+                <div className="absolute bottom-2 right-2 flex items-center gap-1 text-cyan-300 text-sm bg-black/60 px-2 py-1 rounded-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.121 17.804A9.969 9.969 0 0112 15c2.21 0 4.253.714 5.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  {project.users ? project.users.length : 0}
+                </div>
+              </div>
+            ))}
+            {Array.isArray(project) && project.length === 0 && (
+              <div className="text-gray-400 mt-8 col-span-full">No projects found.</div>
+            )}
+          </div>
         </div>
         <button
           onClick={handleLogout}
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 font-semibold ml-4"
+          className="w-full md:w-auto px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 font-semibold md:ml-4 self-start"
         >
           Logout
         </button>
